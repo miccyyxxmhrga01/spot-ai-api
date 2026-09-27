@@ -1,8 +1,6 @@
 .venv/
 __pycache__/
 *.pyc
-models/*.keras
-models/*.json
 reports/*.json
 reports/*.png
 .DS_Store
