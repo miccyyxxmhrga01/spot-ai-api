@@ -9,17 +9,27 @@ It does **not** train SPOT's recommendation engine, collaboration matcher, feedb
 
 V1 uses only visual classes that can reasonably be inferred from a still image:
 
+- `singing` → Music
 - `guitar` → Music
-- `piano` → Music
+- `keyboard` → Music
 - `drums` → Music
 - `painting` → Art
 - `drawing` → Art
 - `dancing` → Dance
+- `cooking` → Culinary
+- `basketball` → Sports
+- `soccer` → Sports
+- `volleyball` → Sports
+- `photography` → Media & Content Creation
 - `other` → no supported visual talent detected
 
-`singing` is intentionally excluded because a still photo of a microphone does not prove that someone is singing. Singing should later use **audio/video analysis**.
+`cooking` covers both people cooking and finished or plated food.
 
-`photography` is intentionally excluded from this classifier because every input is already a photograph/image and the label overlaps other classes. A future photography-specific model can classify styles such as portrait, landscape, street, event, etc.
+`photography` means **a person using a camera**. It does not mean a nice-looking photo: every upload is already a photo, so the model can only learn the act of photographing. Scenic shots, portraits and selfies with no camera in view belong in `other/`.
+
+Sports are split into specific sports instead of one broad `sports` class, because the sports look too different from one another to learn as a single class. Add more sports the same way, each mapped to `Sports`.
+
+**Communication** (public speaking, hosting, debate) is not a class. A speaker holding a mic looks the same as a singer in a still image. Let users pick it manually, or use audio/video analysis later.
 
 ## Folder structure
 
@@ -27,13 +37,19 @@ V1 uses only visual classes that can reasonably be inferred from a still image:
 SPOT_AI/
 ├── dataset/
 │   ├── train/
+│   │   ├── basketball/
+│   │   ├── cooking/
 │   │   ├── dancing/
 │   │   ├── drawing/
 │   │   ├── drums/
 │   │   ├── guitar/
+│   │   ├── keyboard/
 │   │   ├── other/
 │   │   ├── painting/
-│   │   └── piano/
+│   │   ├── photography/
+│   │   ├── singing/
+│   │   ├── soccer/
+│   │   └── volleyball/
 │   ├── validation/
 │   │   └── same class folders...
 │   └── test/
@@ -77,11 +93,10 @@ Do not place the same image in multiple splits. If several frames/photos came fr
 
 ### What goes in `other/`?
 
-Use normal images that do not clearly show one of the six supported talents, for example:
+Use normal images that do not clearly show one of the supported talents, for example:
 
 - classrooms
 - buildings
-- food
 - animals
 - ordinary selfies
 - books
@@ -91,6 +106,8 @@ Use normal images that do not clearly show one of the six supported talents, for
 - unrelated campus scenes
 
 `other` teaches the model that not every uploaded image must be forced into a talent category.
+
+Keep food, people holding cameras, and basketball, soccer or volleyball scenes **out** of `other/`. Those now have their own classes, and a photo that appears under two labels confuses the model. Other sports such as boxing or running can stay in `other/` until they get their own class.
 
 ## 2. Install
 
@@ -187,7 +204,7 @@ Needs confirmation: False
 
 Top suggestions:
   - Guitar       94.20% (Music)
-  - Piano         2.80% (Music)
+  - Keyboard      2.80% (Music)
   - Drums         1.50% (Music)
 ```
 

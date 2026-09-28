@@ -15,8 +15,9 @@ EVALUATION_JSON_PATH = REPORTS_DIR / "evaluation.json"
 CONFUSION_MATRIX_PATH = REPORTS_DIR / "confusion_matrix.png"
 
 # V1 deliberately contains only visual classes that can be reasonably inferred
-# from a still image. Singing should later use audio/video analysis. Photography
-# is kept out because it describes the medium itself and overlaps every photo.
+# from a still image. Photography means a person using a camera, not a scenic
+# photo, because every upload is already a photo. Communication is left out
+# because a speaker holding a mic looks the same as a singer in a still image.
 CLASS_NAMES = (
     "dancing",
     "singing",
@@ -26,6 +27,11 @@ CLASS_NAMES = (
     "other",
     "painting",
     "keyboard",
+    "cooking",
+    "basketball",
+    "soccer",
+    "volleyball",
+    "photography",
 )
 
 SPOT_CATEGORY_MAP = {
@@ -36,6 +42,11 @@ SPOT_CATEGORY_MAP = {
     "painting": "Art",
     "drawing": "Art",
     "dancing": "Dance",
+    "cooking": "Culinary",
+    "basketball": "Sports",
+    "soccer": "Sports",
+    "volleyball": "Sports",
+    "photography": "Media & Content Creation",
     "other": "Other",
 }
 
