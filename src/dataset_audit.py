@@ -4,6 +4,7 @@ Checks:
 - required split/class folders
 - image counts and class imbalance
 - unreadable/corrupt images
+- image formats that training would silently skip (e.g. .webp)
 - exact duplicate files, especially duplicates crossing train/validation/test
 
 Run:
@@ -28,6 +29,10 @@ from config import (
     TRAIN_DIR,
     VALIDATION_DIR,
 )
+
+# keras.utils.image_dataset_from_directory ignores every other extension without
+# an error, so such files would be counted here but never trained or evaluated.
+TRAINABLE_IMAGE_EXTENSIONS = {".bmp", ".gif", ".jpeg", ".jpg", ".png"}
 
 
 @dataclass
@@ -107,6 +112,13 @@ def audit_dataset() -> tuple[bool, dict]:
 
             if len(files) == 0:
                 warnings.append(f"{split_name}/{class_name}: no images yet")
+
+            untrainable = [path for path in files if path.suffix.lower() not in TRAINABLE_IMAGE_EXTENSIONS]
+            if untrainable:
+                errors.append(
+                    f"{split_name}/{class_name}: {len(untrainable)} image(s) training would skip "
+                    f"({', '.join(sorted({path.suffix.lower() for path in untrainable}))}); convert them to .jpg or .png"
+                )
 
             for path in files:
                 problem = validate_image(path)

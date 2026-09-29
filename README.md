@@ -18,16 +18,21 @@ V1 uses only visual classes that can reasonably be inferred from a still image:
 - `dancing` → Dance
 - `cooking` → Culinary
 - `basketball` → Sports
-- `soccer` → Sports
+- `futsal` → Sports
 - `volleyball` → Sports
 - `photography` → Media & Content Creation
+- `coding` → Technology
 - `other` → no supported visual talent detected
 
 `cooking` covers both people cooking and finished or plated food.
 
 `photography` means **a person using a camera**. It does not mean a nice-looking photo: every upload is already a photo, so the model can only learn the act of photographing. Scenic shots, portraits and selfies with no camera in view belong in `other/`.
 
+`coding` means **code visible on a screen**, usually with someone at the keyboard. A laptop or computer with no code showing belongs in `other/`; otherwise the model learns "laptop" instead of "coding".
+
 Sports are split into specific sports instead of one broad `sports` class, because the sports look too different from one another to learn as a single class. Add more sports the same way, each mapped to `Sports`.
+
+`futsal` is indoor, hard-court football. Outdoor soccer on grass looks different, so keep it in `other/` unless you add a separate `soccer` class.
 
 **Communication** (public speaking, hosting, debate) is not a class. A speaker holding a mic looks the same as a singer in a still image. Let users pick it manually, or use audio/video analysis later.
 
@@ -38,17 +43,18 @@ SPOT_AI/
 ├── dataset/
 │   ├── train/
 │   │   ├── basketball/
+│   │   ├── coding/
 │   │   ├── cooking/
 │   │   ├── dancing/
 │   │   ├── drawing/
 │   │   ├── drums/
+│   │   ├── futsal/
 │   │   ├── guitar/
 │   │   ├── keyboard/
 │   │   ├── other/
 │   │   ├── painting/
 │   │   ├── photography/
 │   │   ├── singing/
-│   │   ├── soccer/
 │   │   └── volleyball/
 │   ├── validation/
 │   │   └── same class folders...
@@ -102,12 +108,12 @@ Use normal images that do not clearly show one of the supported talents, for exa
 - books
 - cars
 - landscapes
-- computers
+- computers with no code on screen
 - unrelated campus scenes
 
 `other` teaches the model that not every uploaded image must be forced into a talent category.
 
-Keep food, people holding cameras, and basketball, soccer or volleyball scenes **out** of `other/`. Those now have their own classes, and a photo that appears under two labels confuses the model. Other sports such as boxing or running can stay in `other/` until they get their own class.
+Keep food, people holding cameras, code on screens, and basketball, futsal or volleyball scenes **out** of `other/`. Those now have their own classes, and a photo that appears under two labels confuses the model. Other sports such as outdoor soccer, boxing or running can stay in `other/` until they get their own class.
 
 ## 2. Install
 

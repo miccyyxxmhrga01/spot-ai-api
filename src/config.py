@@ -29,9 +29,10 @@ CLASS_NAMES = (
     "keyboard",
     "cooking",
     "basketball",
-    "soccer",
+    "futsal",
     "volleyball",
     "photography",
+    "coding",
 )
 
 SPOT_CATEGORY_MAP = {
@@ -44,9 +45,10 @@ SPOT_CATEGORY_MAP = {
     "dancing": "Dance",
     "cooking": "Culinary",
     "basketball": "Sports",
-    "soccer": "Sports",
+    "futsal": "Sports",
     "volleyball": "Sports",
     "photography": "Media & Content Creation",
+    "coding": "Technology",
     "other": "Other",
 }
 
