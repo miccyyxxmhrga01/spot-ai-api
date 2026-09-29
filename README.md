@@ -68,7 +68,6 @@ SPOT_AI/
 │   ├── train.py
 │   ├── evaluate.py
 │   ├── predict.py
-│   ├── moderation.py
 │   ├── api_server.py
 │   └── utils.py
 ├── requirements.txt
@@ -217,35 +216,7 @@ Top suggestions:
 
 The default confidence threshold is **70%**. Below the threshold, SPOT should ask the user to confirm the category rather than silently auto-tagging the post.
 
-## 7. Explicit content filter
-
-Every upload to `/predict` is screened for explicit, sexual or adult content **before** it is classified. SPOT uses the pre-trained [Open NSFW](https://github.com/bhky/opennsfw2) model, which returns the probability that an image is explicit. Images at or above `NSFW_BLOCK_THRESHOLD` in `src/config.py` (default **80%**) are rejected and must not be posted.
-
-The model weights (`models/open_nsfw_weights.h5`, about 24 MB) download automatically the first time the filter runs. Include them in deployments the same way as `spot_talent_classifier.keras`, so the server does not have to download them on its first request.
-
-Check one image:
-
-```bash
-python src/moderation.py path/to/image.jpg
-```
-
-```text
-NSFW probability: 0.42%
-Threshold: 80%
-Blocked: False
-```
-
-On SPOT's own 5,446 dataset photos (all safe talent images), an 80% threshold flagged 14 (0.26%). Most were close-ups where hands fill the frame (typing on a laptop, playing piano) and figure drawings. Dancing, basketball and volleyball photos all scored below 80%.
-
-| Threshold | Safe dataset photos flagged |
-|---|---|
-| 70% | 26 (0.48%) |
-| 80% | 14 (0.26%) |
-| 90% | 5 (0.09%) |
-
-Lower the threshold to catch more borderline images at the cost of more false alarms; raise it to block only obvious cases. The filter is automated and will make some mistakes, so keep a way for users to report posts.
-
-## 8. API for the Android app
+## 7. API for the Android app
 
 Run:
 
@@ -293,23 +264,7 @@ Example response:
       "confidence": 0.942,
       "confidence_percent": 94.2
     }
-  ],
-  "blocked": false,
-  "nsfw_probability": 0.0042,
-  "nsfw_threshold": 0.8
-}
-```
-
-If the image is explicit, the API returns HTTP **422** and no talent prediction:
-
-```json
-{
-  "success": false,
-  "error": "This image appears to contain explicit or sexual content and can't be posted.",
-  "reason": "explicit_content",
-  "blocked": true,
-  "nsfw_probability": 0.97,
-  "nsfw_threshold": 0.8
+  ]
 }
 ```
 
@@ -340,17 +295,6 @@ Choose the talent category manually.
 ```
 
 This makes wrong predictions less disruptive and lets future user confirmations become useful training/feedback data.
-
-When the response has `"blocked": true`, do **not** upload the post. Discard the image and show the `error` message:
-
-```text
-This image can't be posted.
-It appears to contain explicit or sexual content.
-
-[Choose another photo]
-```
-
-Only upload a post after `/predict` returns `"success": true`. If the request fails for any other reason (server down, timeout), do not skip the check and upload anyway; ask the user to try again.
 
 ## What to build separately later
 

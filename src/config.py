@@ -10,7 +10,6 @@ REPORTS_DIR = PROJECT_ROOT / "reports"
 
 MODEL_PATH = MODELS_DIR / "spot_talent_classifier.keras"
 CLASS_NAMES_PATH = MODELS_DIR / "class_names.json"
-NSFW_WEIGHTS_PATH = MODELS_DIR / "open_nsfw_weights.h5"
 TRAINING_HISTORY_PATH = REPORTS_DIR / "training_history.json"
 EVALUATION_JSON_PATH = REPORTS_DIR / "evaluation.json"
 CONFUSION_MATRIX_PATH = REPORTS_DIR / "confusion_matrix.png"
@@ -65,11 +64,6 @@ FINE_TUNE_LAST_N_LAYERS = 30
 # manually by the user in SPOT.
 CONFIDENCE_THRESHOLD = 0.70
 TOP_K = 3
-
-# Every upload is screened by the pre-trained Open NSFW model before it is
-# classified. An image whose explicit/sexual-content probability reaches this
-# threshold is rejected and must not be posted to SPOT.
-NSFW_BLOCK_THRESHOLD = 0.80
 
 SUPPORTED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 MIN_RECOMMENDED_IMAGES_PER_CLASS = 100
