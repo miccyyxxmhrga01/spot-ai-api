@@ -6,6 +6,7 @@ from pathlib import Path
 from flask import Flask, jsonify, request
 
 from config import MAX_UPLOAD_BYTES, SUPPORTED_IMAGE_EXTENSIONS
+from moderation import check_image, get_nsfw_model
 from predict import get_model_and_classes, predict_image
 
 app = Flask(__name__)
@@ -27,10 +28,12 @@ def home():
 def health():
     try:
         _, class_names = get_model_and_classes()
+        get_nsfw_model()
         return jsonify(
             {
                 "success": True,
                 "model_loaded": True,
+                "moderation_loaded": True,
                 "classes": class_names,
             }
         )
@@ -74,8 +77,20 @@ def predict():
             temp_path = Path(temp_file.name)
             uploaded.save(temp_file)
 
+        # Screen before classifying so explicit images never get talent tags.
+        moderation = check_image(temp_path)
+        if moderation["blocked"]:
+            return jsonify(
+                {
+                    "success": False,
+                    "error": "This image appears to contain explicit or sexual content and can't be posted.",
+                    "reason": "explicit_content",
+                    **moderation,
+                }
+            ), 422
+
         result = predict_image(temp_path)
-        return jsonify({"success": True, **result})
+        return jsonify({"success": True, **result, **moderation})
 
     except ValueError as error:
         return jsonify({"success": False, "error": str(error)}), 400
